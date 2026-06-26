@@ -221,7 +221,10 @@
     <div class="card">
       <div class="topbar">
         <div><strong style="color:#eaf7f0" id="title-productos">Productos</strong></div>
-        <div class="search"><input id="search" placeholder="Buscar referencia o talla..."></div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="search"><input id="search" placeholder="Buscar referencia o talla..."></div>
+          <button id="btn-exportar" title="Exportar a Excel" style="background:linear-gradient(180deg,rgba(31,184,130,0.16),rgba(31,184,130,0.08));border:1px solid rgba(31,184,130,0.35);color:var(--accent);padding:9px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap;transition:all 0.2s ease;">📥 Excel</button>
+        </div>
       </div>
       <div class="table-wrap">
         <table id="tabla">
@@ -536,6 +539,47 @@ btnAnterior.addEventListener('click', () => { if(paginaActual>1){paginaActual--;
 btnSiguiente.addEventListener('click', () => { if(paginaActual<totalPaginas){paginaActual++; cargarProductos();} });
 btnUltimaPag.addEventListener('click', () => { paginaActual=totalPaginas; cargarProductos(); });
 search.addEventListener('input', () => { paginaActual=1; cargarProductos(); });
+
+// ─── EXPORTAR EXCEL ──────────────────────────────────────────────────────────
+document.getElementById('btn-exportar').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-exportar');
+  btn.textContent = '⏳ Exportando...';
+  btn.disabled = true;
+
+  try {
+    const res = await apiFetch(`${API_BASE}/api/productos?pagina=1&limite=2000&busqueda=`);
+    if (!res) { btn.textContent = '📥 Excel'; btn.disabled = false; return; }
+    const data = await res.json();
+    if (!data.ok || !data.productos.length) {
+      alert('No hay productos para exportar.');
+      btn.textContent = '📥 Excel'; btn.disabled = false; return;
+    }
+
+    const productos = data.productos;
+    // BOM para que Excel abra bien tildes y ñ
+    const BOM = '\uFEFF';
+    let csv = BOM + 'ID,REFERENCIA,TALLA,CANTIDAD\n';
+    productos.forEach(p => {
+      csv += `${p.id},${p.referencia},${p.talla},${p.cantidad}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fecha = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `inventario-${fecha}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(err) {
+    alert('Error al exportar. Intenta de nuevo.');
+  }
+
+  btn.textContent = '📥 Excel';
+  btn.disabled = false;
+});
 
 cargarProductos();
 </script>
