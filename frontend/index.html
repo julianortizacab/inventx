@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invent X Solutions - Development Software</title>
+  <style>
+    :root{
+      --bg:#0b0d10;--panel:#0f1417;--muted:#9ba3a6;--accent:#1fb882;
+      --card:#0f1417;--glass:rgba(255,255,255,0.03);--danger:#ff5c5c;
+      --radius:12px;--soft-shadow:0 6px 18px rgba(2,6,8,0.6);
+      --glass-shadow:0 8px 30px rgba(11,13,16,0.6);
+      font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;min-height:100vh;
+      background:radial-gradient(1200px 500px at 10% 10%,rgba(31,184,130,0.03),transparent 6%),
+        radial-gradient(900px 400px at 90% 90%,rgba(9,132,255,0.02),transparent 6%),var(--bg);
+      color:#e6f0ee;padding:28px;padding-bottom:60px;
+      display:flex;align-items:flex-start;justify-content:center;-webkit-font-smoothing:antialiased;}
+    .app{width:100%;max-width:1100px;display:grid;grid-template-columns:420px 1fr;gap:22px;}
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Exo+2:wght@300;400;500&display=swap');
+    .brand{position:relative;display:flex;gap:16px;align-items:center;margin-bottom:20px;padding:16px 18px;border-radius:14px;
+      background:linear-gradient(135deg,rgba(31,184,130,0.07) 0%,rgba(31,184,130,0.03) 40%,rgba(9,132,255,0.03) 100%);
+      border:1px solid rgba(31,184,130,0.12);overflow:hidden;}
+    .brand::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+      background:linear-gradient(180deg,var(--accent),rgba(31,184,130,0.2));border-radius:3px 0 0 3px;}
+    .brand::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;
+      background:radial-gradient(circle,rgba(31,184,130,0.07),transparent 70%);pointer-events:none;}
+    .logo{width:54px;height:54px;border-radius:12px;
+      background:linear-gradient(135deg,rgba(31,184,130,0.18),rgba(31,184,130,0.06));
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 0 0 1px rgba(31,184,130,0.15),0 4px 16px rgba(31,184,130,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
+      overflow:hidden;padding:5px;flex-shrink:0;}
+    .logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(31,184,130,0.4));}
+    .brand-text{display:flex;flex-direction:column;gap:3px;flex:1;}
+    .brand h1{margin:0;font-family:'Rajdhani','Segoe UI',sans-serif;font-size:20px;font-weight:700;
+      letter-spacing:1.5px;text-transform:uppercase;color:#e8fdf4;line-height:1;}
+    .brand h1 span{color:var(--accent);}
+    .brand-sub{display:flex;align-items:center;gap:6px;}
+    .brand p{margin:0;font-family:'Exo 2','Segoe UI',sans-serif;font-size:9px;font-weight:400;
+      letter-spacing:0.5px;color:rgba(155,163,166,0.7);}
+    .brand-pill{font-family:'Exo 2','Segoe UI',sans-serif;font-size:9px;font-weight:500;letter-spacing:1px;
+      text-transform:uppercase;color:var(--accent);background:rgba(31,184,130,0.1);
+      border:1px solid rgba(31,184,130,0.2);border-radius:4px;padding:2px 6px;white-space:nowrap;}
+    .brand-status{display:flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0;}
+    .brand-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+      box-shadow:0 0 6px var(--accent);animation:pulse-dot 2.4s ease-in-out infinite;}
+    @keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 6px var(--accent);}50%{opacity:0.35;box-shadow:0 0 2px var(--accent);}}
+    .brand-status-text{font-family:'Exo 2','Segoe UI',sans-serif;font-size:10px;font-weight:500;
+      letter-spacing:0.8px;text-transform:uppercase;color:rgba(31,184,130,0.65);}
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:var(--radius);padding:18px;box-shadow:var(--glass-shadow);border:1px solid rgba(255,255,255,0.03);}
+    .label{display:block;margin-bottom:8px;font-weight:600;color:#cfeee0}
+    .ref-row{display:flex;gap:10px;align-items:center}
+    .ref-prefix{background:linear-gradient(180deg,rgba(31,184,130,0.12),rgba(31,184,130,0.06));
+      border-radius:10px;padding:10px 12px;color:var(--accent);font-weight:700;
+      border:1px solid rgba(31,184,130,0.06);cursor:pointer;user-select:none;transition:all 0.2s ease;white-space:nowrap;}
+    .ref-prefix:hover{background:linear-gradient(180deg,rgba(31,184,130,0.22),rgba(31,184,130,0.12));
+      border-color:rgba(31,184,130,0.3);box-shadow:0 0 10px rgba(31,184,130,0.15);}
+    .ref-prefix:active{transform:scale(0.96);}
+    input[type="text"]{width:100%;border-radius:10px;padding:10px 12px;background:var(--glass);
+      border:1px solid rgba(255,255,255,0.03);color:#eaf7f0;font-size:14px;outline:none;
+      transition:box-shadow .18s,border-color .18s,background .18s;}
+    input::placeholder{color:rgba(230,240,235,0.22)}
+    input:focus{box-shadow:0 6px 20px rgba(31,184,130,0.08);border-color:rgba(31,184,130,0.26);background:rgba(255,255,255,0.02);}
+    .tallas-grid{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
+    .t-item{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.015));
+      border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,0.02);
+      display:flex;align-items:center;justify-content:space-between;}
+    .t-label{font-weight:700;color:var(--accent);font-size:14px}
+    .t-cant{width:120px;padding:8px;border-radius:8px;text-align:center;background:transparent;
+      border:1px solid rgba(255,255,255,0.03);color:#eaf7f0}
+    .actions{margin-top:14px;display:flex;gap:10px}
+    .btn{padding:10px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer;font-size:14px;transition:all 0.2s ease;}
+    .btn-primary{background:linear-gradient(180deg,var(--accent),#149a66);color:#02120d;
+      box-shadow:0 8px 20px rgba(31,184,130,0.12);flex:1}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(31,184,130,0.18);}
+    .btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);width:110px}
+    .btn-secondary:hover{border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02)}
+    .right{display:flex;flex-direction:column;gap:12px;}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));
+      border-radius:var(--radius);padding:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--soft-shadow);}
+    .table-wrap{overflow:auto;border-radius:8px;background:transparent;max-height:calc(100vh - 280px)}
+    table{width:100%;border-collapse:collapse;min-width:640px}
+    th,td{padding:12px 10px;text-align:center;font-size:13px;color:#dff6ec}
+    th{font-size:12px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.03)}
+    tr{border-bottom:1px solid rgba(255,255,255,0.02)}
+    tr:hover td{background:rgba(255,255,255,0.02);}
+    .delete-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:7px 10px;
+      border-radius:8px;color:var(--danger);font-weight:700;cursor:pointer;transition:all 0.2s ease;}
+    .delete-btn:hover{background:rgba(255,92,92,0.06);border-color:var(--danger)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .search{width:260px}
+    .search input{width:100%;padding:9px;border-radius:10px;background:var(--glass);
+      border:1px solid rgba(255,255,255,0.02);color:#eaf7f0}
+    .ref-valida{border-color:rgba(31,184,130,0.4)!important;background:rgba(31,184,130,0.03)!important;}
+    .ref-invalida{border-color:rgba(255,92,92,0.4)!important;background:rgba(255,92,92,0.03)!important;}
+    .pagination{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:10px 14px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));
+      border-radius:10px;border:1px solid rgba(255,255,255,0.03);}
+    .pagination-info{font-size:13px;color:var(--muted);}
+    .pagination-controls{display:flex;gap:8px;align-items:center;}
+    .pagination-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 14px;
+      border-radius:8px;color:#eaf7f0;font-weight:600;cursor:pointer;font-size:13px;transition:all 0.2s ease;}
+    .pagination-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(31,184,130,0.05);color:var(--accent);}
+    .pagination-btn:disabled{opacity:0.3;cursor:not-allowed;}
+    .pagination-current{padding:8px 14px;font-weight:700;color:var(--accent);font-size:13px;}
+    @media(max-width:960px){.app{grid-template-columns:1fr;}}
+    .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.8);z-index:9999;justify-content:center;align-items:center;}
+    .modal-overlay.active{display:flex;}
+    .modal-box{background:var(--panel);border:1px solid var(--accent);border-radius:var(--radius);
+      padding:24px;max-width:400px;box-shadow:0 10px 40px rgba(0,0,0,0.5);}
+    .modal-title{color:var(--accent);font-size:18px;font-weight:700;margin-bottom:12px;}
+    .modal-message{color:#e6f0ee;margin-bottom:20px;font-size:14px;}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+    .modal-btn{padding:10px 20px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:14px;transition:all 0.2s ease;}
+    .modal-btn-cancel{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);}
+    .modal-btn-cancel:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);}
+    .modal-btn-confirm{background:var(--danger);color:#fff;}
+    .modal-btn-confirm:hover{background:#ff3030;box-shadow:0 4px 12px rgba(255,92,92,0.3);}
+    .tabs{display:flex;gap:6px;margin-bottom:14px;}
+    .tab-btn{flex:1;padding:9px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.04);
+      background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
+      letter-spacing:0.5px;text-transform:uppercase;transition:all 0.2s ease;}
+    .tab-btn:hover{border-color:rgba(31,184,130,0.25);color:#cfeee0;background:rgba(31,184,130,0.04);}
+    .tab-btn.active{background:linear-gradient(180deg,rgba(31,184,130,0.16),rgba(31,184,130,0.08));
+      border-color:rgba(31,184,130,0.35);color:var(--accent);box-shadow:0 4px 14px rgba(31,184,130,0.1);}
+    .tab-content{display:none;} .tab-content.active{display:block;}
+    .watermark{position:fixed;bottom:0;left:0;width:100%;z-index:100;display:flex;align-items:center;
+      justify-content:center;gap:10px;padding:3px 20px;
+      background:linear-gradient(90deg,rgba(11,13,16,0.97),rgba(15,20,23,0.99),rgba(11,13,16,0.97));
+      border-top:1px solid rgba(31,184,130,0.06);pointer-events:none;user-select:none;}
+    .watermark-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:0.35;flex-shrink:0;}
+    .watermark-text{font-size:9px;font-weight:500;letter-spacing:0.6px;color:rgba(155,163,166,0.4);text-transform:uppercase;}
+    .watermark-text span{color:rgba(31,184,130,0.4);font-weight:700;}
+    #btn-logout{background:transparent;border:1px solid rgba(255,92,92,0.2);color:rgba(255,92,92,0.6);
+      padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;}
+    #btn-logout:hover{border-color:var(--danger);color:var(--danger);background:rgba(255,92,92,0.06);}
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div>
+    <div class="panel">
+      <div class="brand">
+        <div class="logo">
+          <img src="logo.png" alt="Invent X Logo" onerror="this.style.display='none'">
+        </div>
+        <div class="brand-text">
+          <h1>Invent<span> X</span> Solutions</h1>
+          <div class="brand-sub">
+            <p>ERP | Plataforma de Gestión Empresarial – Lola Jeans</p>
+            <span class="brand-pill">2026</span>
+          </div>
+        </div>
+        <div class="brand-status">
+          <div class="brand-dot"></div>
+          <span class="brand-status-text">Sistema Activo</span>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button id="btn-logout">Cerrar sesión</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-jeans" type="button">👖 Jeans</button>
+        <button class="tab-btn" id="tab-blusas" type="button">👚 Blusas</button>
+      </div>
+
+      <div class="tab-content active" id="content-jeans">
+        <form id="formulario-jeans">
+          <label class="label">Referencia</label>
+          <div class="ref-row">
+            <div class="ref-prefix" id="refPrefix" title="Clic para cambiar prefijo (06 → 07 → 03)">06-</div>
+            <input type="text" id="refSuffix" maxlength="5" inputmode="numeric" placeholder="Ej: 1234" required>
+          </div>
+          <label class="label" style="margin-top:12px">Tallas</label>
+          <div class="tallas-grid">
+            <div class="t-item"><span class="t-label">04</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="04"></div>
+            <div class="t-item"><span class="t-label">06</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="06"></div>
+            <div class="t-item"><span class="t-label">08</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="08"></div>
+            <div class="t-item"><span class="t-label">10</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="10"></div>
+            <div class="t-item"><span class="t-label">12</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="12"></div>
+            <div class="t-item"><span class="t-label">14</span><input class="t-cant t-cant-jeans" type="text" inputmode="numeric" data-talla="14"></div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" id="btn-ultima" class="btn btn-secondary">Última</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="tab-content" id="content-blusas">
+        <form id="formulario-blusas">
+          <label class="label">Referencia</label>
+          <div class="ref-row">
+            <div class="ref-prefix" id="refPrefixBlusas" title="Clic para cambiar prefijo" style="min-width:52px">06-</div>
+            <input type="text" id="refSuffixBlusas" maxlength="5" inputmode="numeric" placeholder="Ej: 1234" required>
+          </div>
+          <label class="label" style="margin-top:12px">Tallas</label>
+          <div class="tallas-grid">
+            <div class="t-item"><span class="t-label">S</span><input class="t-cant t-cant-blusas" type="text" inputmode="numeric" data-talla="S"></div>
+            <div class="t-item"><span class="t-label">M</span><input class="t-cant t-cant-blusas" type="text" inputmode="numeric" data-talla="M"></div>
+            <div class="t-item"><span class="t-label">L</span><input class="t-cant t-cant-blusas" type="text" inputmode="numeric" data-talla="L"></div>
+            <div class="t-item"><span class="t-label">U</span><input class="t-cant t-cant-blusas" type="text" inputmode="numeric" data-talla="U"></div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" id="btn-ultima-blusas" class="btn btn-secondary">Última</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <div class="topbar">
+        <div><strong style="color:#eaf7f0" id="title-productos">Productos</strong></div>
+        <div class="search"><input id="search" placeholder="Buscar referencia o talla..."></div>
+      </div>
+      <div class="table-wrap">
+        <table id="tabla">
+          <thead><tr><th>ID</th><th>Referencia</th><th>Talla</th><th>Cantidad</th><th>Acción</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <div class="pagination-info" id="pagination-info">Mostrando 0 - 0 de 0 registros</div>
+        <div class="pagination-controls">
+          <button class="pagination-btn" id="btn-primera">&#10218;</button>
+          <button class="pagination-btn" id="btn-anterior">&#8249;</button>
+          <span class="pagination-current" id="pagination-current">Pág 1</span>
+          <button class="pagination-btn" id="btn-siguiente">&#8250;</button>
+          <button class="pagination-btn" id="btn-ultima-pag">&#10219;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="watermark">
+  <div class="watermark-dot"></div>
+  <span class="watermark-text">ERP® – Licencia Empresarial – Desarrollado por <span>Invent X Solutions</span> © 2026</span>
+  <div class="watermark-dot"></div>
+</div>
+
+<div class="modal-overlay" id="modalWarning">
+  <div class="modal-box" style="text-align:center">
+    <div style="font-size:42px;margin-bottom:10px">⚠️</div>
+    <div class="modal-title" style="color:#f0a500">¡Recuerda llenar las cantidades!</div>
+    <div class="modal-message">Debes ingresar al menos una cantidad en alguna talla antes de guardar.</div>
+    <div class="modal-actions" style="justify-content:center">
+      <button class="modal-btn" id="modalWarningOk" style="background:linear-gradient(180deg,#1fb882,#149a66);color:#02120d;padding:10px 32px">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal-box">
+    <div class="modal-title">Confirmar eliminación</div>
+    <div class="modal-message">¿Estás seguro de eliminar este registro?</div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// ⚠️ IMPORTANTE: Reemplaza esta URL con la URL real de tu backend en Railway
+const API_BASE = 'https://tu-backend.up.railway.app';
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+function getToken() { return localStorage.getItem('inventx_token'); }
+
+if (!getToken()) { window.location.href = 'login.html'; }
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() };
+}
+
+async function apiFetch(url, options = {}) {
+  options.headers = { ...authHeaders(), ...(options.headers || {}) };
+  try {
+    const res = await fetch(url, options);
+    if (res.status === 401 || res.status === 403) {
+      localStorage.removeItem('inventx_token');
+      localStorage.removeItem('inventx_user');
+      window.location.href = 'login.html';
+      return null;
+    }
+    return res;
+  } catch (err) {
+    console.error('Error de red:', err);
+    return null;
+  }
+}
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  localStorage.removeItem('inventx_token');
+  localStorage.removeItem('inventx_user');
+  window.location.href = 'login.html';
+});
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+const tabJeans = document.getElementById('tab-jeans');
+const tabBlusas = document.getElementById('tab-blusas');
+const contentJeans = document.getElementById('content-jeans');
+const contentBlusas = document.getElementById('content-blusas');
+
+tabJeans.addEventListener('click', () => {
+  tabJeans.classList.add('active'); tabBlusas.classList.remove('active');
+  contentJeans.classList.add('active'); contentBlusas.classList.remove('active');
+  setTimeout(() => refSuffix.focus(), 80);
+});
+tabBlusas.addEventListener('click', () => {
+  tabBlusas.classList.add('active'); tabJeans.classList.remove('active');
+  contentBlusas.classList.add('active'); contentJeans.classList.remove('active');
+  setTimeout(() => refSuffixBlusas.focus(), 80);
+});
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function esReferenciaValida(s) { return /^\d{4,5}$/.test(s.trim()); }
+
+// ─── JEANS ───────────────────────────────────────────────────────────────────
+const form = document.getElementById('formulario-jeans');
+const refSuffix = document.getElementById('refSuffix');
+const camposTallas = document.querySelectorAll('.t-cant-jeans');
+const refPrefixEl = document.getElementById('refPrefix');
+let prefijoActual = '06';
+let referenciaValidada = false;
+
+refPrefixEl.addEventListener('click', () => {
+  prefijoActual = prefijoActual === '06' ? '07' : prefijoActual === '07' ? '03' : '06';
+  refPrefixEl.textContent = prefijoActual + '-';
+  refSuffix.value = ''; refSuffix.classList.remove('ref-valida','ref-invalida');
+  referenciaValidada = false; deshabilitarTallas(true); refSuffix.focus();
+});
+
+function validarReferencia() {
+  const s = refSuffix.value.trim();
+  if (!s) { refSuffix.classList.remove('ref-valida','ref-invalida'); referenciaValidada=false; deshabilitarTallas(true); return false; }
+  const ok = esReferenciaValida(s);
+  refSuffix.classList.toggle('ref-valida', ok); refSuffix.classList.toggle('ref-invalida', !ok);
+  referenciaValidada = ok; deshabilitarTallas(!ok); return ok;
+}
+function deshabilitarTallas(d) {
+  camposTallas.forEach(c => { c.disabled=d; c.style.opacity=d?'0.4':'1'; c.style.cursor=d?'not-allowed':'text'; });
+}
+deshabilitarTallas(true);
+
+function resetearFormulario() {
+  camposTallas.forEach(c => c.value='');
+  refSuffix.value=''; refSuffix.classList.remove('ref-valida','ref-invalida');
+  referenciaValidada=false; deshabilitarTallas(true); refSuffix.focus();
+}
+
+refSuffix.addEventListener('input', () => { refSuffix.value=refSuffix.value.replace(/\D/g,''); validarReferencia(); });
+refSuffix.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); if (validarReferencia()) camposTallas[0].focus(); } });
+camposTallas.forEach((input, i) => {
+  input.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); const next=camposTallas[i+1]; next ? next.focus() : form.dispatchEvent(new Event('submit')); } });
+  input.addEventListener('input', e => { e.target.value=e.target.value.replace(/\D/g,''); });
+  input.addEventListener('keypress', e => { if (!/^[0-9]$/.test(e.key)) e.preventDefault(); });
+  input.addEventListener('paste', e => { e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,''); if(t) e.target.value=t; });
+});
+setTimeout(() => refSuffix.focus(), 100);
+
+document.getElementById('btn-ultima').addEventListener('click', async () => {
+  const res = await apiFetch(`${API_BASE}/api/productos/ultima-referencia`);
+  if (!res) return;
+  const data = await res.json();
+  if (data.referencia) {
+    const p = data.referencia.split('-');
+    if (p.length>=2 && ['06','07','03'].includes(p[0])) { prefijoActual=p[0]; refPrefixEl.textContent=prefijoActual+'-'; }
+    refSuffix.value=data.referencia.replace(prefijoActual+'-','');
+    validarReferencia(); if (referenciaValidada) camposTallas[0].focus();
+  } else { alert('No hay registros'); }
+});
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const sufijo = refSuffix.value.trim();
+  if (!sufijo) { alert('Por favor ingresa una referencia.'); return; }
+  if (!esReferenciaValida(sufijo)) { alert('⚠️ La referencia debe tener entre 4 y 5 dígitos numéricos'); return; }
+  const referencia = prefijoActual + '-' + sufijo;
+  const datos = [];
+  camposTallas.forEach(c => { const cant=parseInt(c.value,10); if (!isNaN(cant) && cant>0) datos.push({talla:c.dataset.talla, cantidad:cant}); });
+  if (datos.length===0) { mostrarAdvertencia(); return; }
+  await Promise.all(datos.map(d => apiFetch(`${API_BASE}/api/productos`, { method:'POST', body:JSON.stringify({referencia, talla:d.talla, cantidad:d.cantidad}) })));
+  resetearFormulario(); await cargarProductos();
+});
+
+// ─── BLUSAS ──────────────────────────────────────────────────────────────────
+const formBlusas = document.getElementById('formulario-blusas');
+const refSuffixBlusas = document.getElementById('refSuffixBlusas');
+const camposTallasBlusas = document.querySelectorAll('.t-cant-blusas');
+const refPrefixBlusasEl = document.getElementById('refPrefixBlusas');
+let prefijoBlusas = '06';
+let refBlusasValidada = false;
+
+refPrefixBlusasEl.addEventListener('click', () => {
+  prefijoBlusas = prefijoBlusas==='06'?'07':prefijoBlusas==='07'?'03':'06';
+  refPrefixBlusasEl.textContent=prefijoBlusas+'-';
+  refSuffixBlusas.value=''; refSuffixBlusas.classList.remove('ref-valida','ref-invalida');
+  refBlusasValidada=false; deshabilitarTallasBlusas(true); refSuffixBlusas.focus();
+});
+
+function validarReferenciaBlusas() {
+  const s=refSuffixBlusas.value.trim();
+  if (!s) { refSuffixBlusas.classList.remove('ref-valida','ref-invalida'); refBlusasValidada=false; deshabilitarTallasBlusas(true); return false; }
+  const ok=esReferenciaValida(s);
+  refSuffixBlusas.classList.toggle('ref-valida',ok); refSuffixBlusas.classList.toggle('ref-invalida',!ok);
+  refBlusasValidada=ok; deshabilitarTallasBlusas(!ok); return ok;
+}
+function deshabilitarTallasBlusas(d) {
+  camposTallasBlusas.forEach(c => { c.disabled=d; c.style.opacity=d?'0.4':'1'; c.style.cursor=d?'not-allowed':'text'; });
+}
+deshabilitarTallasBlusas(true);
+
+function resetearFormularioBlusas() {
+  camposTallasBlusas.forEach(c => c.value='');
+  refSuffixBlusas.value=''; refSuffixBlusas.classList.remove('ref-valida','ref-invalida');
+  refBlusasValidada=false; deshabilitarTallasBlusas(true); refSuffixBlusas.focus();
+}
+
+refSuffixBlusas.addEventListener('input', () => { refSuffixBlusas.value=refSuffixBlusas.value.replace(/\D/g,''); validarReferenciaBlusas(); });
+refSuffixBlusas.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); if (validarReferenciaBlusas()) camposTallasBlusas[0].focus(); } });
+camposTallasBlusas.forEach((input, i) => {
+  input.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); const next=camposTallasBlusas[i+1]; next ? next.focus() : formBlusas.dispatchEvent(new Event('submit')); } });
+  input.addEventListener('input', e => { e.target.value=e.target.value.replace(/\D/g,''); });
+  input.addEventListener('keypress', e => { if (!/^[0-9]$/.test(e.key)) e.preventDefault(); });
+  input.addEventListener('paste', e => { e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,''); if(t) e.target.value=t; });
+});
+
+document.getElementById('btn-ultima-blusas').addEventListener('click', async () => {
+  const res = await apiFetch(`${API_BASE}/api/productos/ultima-referencia-blusas`);
+  if (!res) return;
+  const data = await res.json();
+  if (data.referencia) {
+    const p=data.referencia.split('-');
+    if (p.length>=2 && ['06','07','03'].includes(p[0])) { prefijoBlusas=p[0]; refPrefixBlusasEl.textContent=prefijoBlusas+'-'; }
+    refSuffixBlusas.value=data.referencia.replace(prefijoBlusas+'-','');
+    validarReferenciaBlusas(); if (refBlusasValidada) camposTallasBlusas[0].focus();
+  } else { alert('No hay registros de blusas'); }
+});
+
+formBlusas.addEventListener('submit', async e => {
+  e.preventDefault();
+  const sufijo=refSuffixBlusas.value.trim();
+  if (!sufijo) { alert('Por favor ingresa una referencia.'); return; }
+  if (!esReferenciaValida(sufijo)) { alert('⚠️ La referencia debe tener entre 4 y 5 dígitos numéricos'); return; }
+  const referencia=prefijoBlusas+'-'+sufijo;
+  const datos=[];
+  camposTallasBlusas.forEach(c => { const cant=parseInt(c.value,10); if (!isNaN(cant) && cant>0) datos.push({talla:c.dataset.talla, cantidad:cant}); });
+  if (datos.length===0) { mostrarAdvertencia(); return; }
+  await Promise.all(datos.map(d => apiFetch(`${API_BASE}/api/productos`, { method:'POST', body:JSON.stringify({referencia, talla:d.talla, cantidad:d.cantidad}) })));
+  resetearFormularioBlusas(); await cargarProductos();
+});
+
+// ─── MODALES ─────────────────────────────────────────────────────────────────
+const modalWarning = document.getElementById('modalWarning');
+const modalWarningOk = document.getElementById('modalWarningOk');
+function mostrarAdvertencia() { modalWarning.classList.add('active'); }
+modalWarningOk.addEventListener('click', () => modalWarning.classList.remove('active'));
+modalWarning.addEventListener('click', e => { if(e.target===modalWarning) modalWarning.classList.remove('active'); });
+
+// ─── TABLA ───────────────────────────────────────────────────────────────────
+const tablaBody = document.querySelector('#tabla tbody');
+const search = document.getElementById('search');
+const modalConfirm = document.getElementById('modalConfirm');
+const modalCancel = document.getElementById('modalCancel');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+const btnPrimera = document.getElementById('btn-primera');
+const btnAnterior = document.getElementById('btn-anterior');
+const btnSiguiente = document.getElementById('btn-siguiente');
+const btnUltimaPag = document.getElementById('btn-ultima-pag');
+const paginationInfo = document.getElementById('pagination-info');
+const paginationCurrent = document.getElementById('pagination-current');
+const titleProductos = document.getElementById('title-productos');
+
+let paginaActual=1, registrosPorPagina=50, totalRegistros=0, totalPaginas=0;
+let productoAEliminar=null;
+
+async function cargarProductos() {
+  const busqueda = search.value;
+  const res = await apiFetch(`${API_BASE}/api/productos?pagina=${paginaActual}&limite=${registrosPorPagina}&busqueda=${encodeURIComponent(busqueda)}`);
+  if (!res) return;
+  const data = await res.json();
+  if (!data.ok) return;
+  totalRegistros=data.total; totalPaginas=Math.ceil(totalRegistros/registrosPorPagina);
+  renderTable(data.productos); actualizarPaginacion();
+}
+
+function renderTable(productos) {
+  tablaBody.innerHTML='';
+  productos.forEach(p => {
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.id}</td><td>${p.referencia}</td><td>${p.talla}</td><td>${p.cantidad}</td><td><button class="delete-btn" data-id="${p.id}">Eliminar</button></td>`;
+    tablaBody.appendChild(tr);
+  });
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', function() { eliminarProducto(this.getAttribute('data-id')); });
+  });
+}
+
+function eliminarProducto(id) { productoAEliminar=id; modalConfirm.classList.add('active'); }
+
+modalCancel.addEventListener('click', () => { modalConfirm.classList.remove('active'); productoAEliminar=null; });
+modalConfirm.addEventListener('click', e => { if(e.target===modalConfirm) { modalConfirm.classList.remove('active'); productoAEliminar=null; } });
+modalConfirmBtn.addEventListener('click', async () => {
+  if (productoAEliminar) {
+    modalConfirm.classList.remove('active');
+    await apiFetch(`${API_BASE}/api/productos/${productoAEliminar}`, {method:'DELETE'});
+    productoAEliminar=null; await cargarProductos();
+  }
+});
+
+function actualizarPaginacion() {
+  const inicio=totalRegistros===0?0:(paginaActual-1)*registrosPorPagina+1;
+  const fin=Math.min(paginaActual*registrosPorPagina, totalRegistros);
+  paginationInfo.textContent=`Mostrando ${inicio} - ${fin} de ${totalRegistros} registros`;
+  paginationCurrent.textContent=`Pág ${paginaActual} de ${totalPaginas}`;
+  titleProductos.textContent=`Productos (${totalRegistros} total)`;
+  btnPrimera.disabled=paginaActual===1; btnAnterior.disabled=paginaActual===1;
+  btnSiguiente.disabled=paginaActual>=totalPaginas; btnUltimaPag.disabled=paginaActual>=totalPaginas;
+}
+
+btnPrimera.addEventListener('click', () => { paginaActual=1; cargarProductos(); });
+btnAnterior.addEventListener('click', () => { if(paginaActual>1){paginaActual--; cargarProductos();} });
+btnSiguiente.addEventListener('click', () => { if(paginaActual<totalPaginas){paginaActual++; cargarProductos();} });
+btnUltimaPag.addEventListener('click', () => { paginaActual=totalPaginas; cargarProductos(); });
+search.addEventListener('input', () => { paginaActual=1; cargarProductos(); });
+
+cargarProductos();
+</script>
+</body>
+</html>

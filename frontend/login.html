@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Invent X Solutions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #36bb9c;
+      margin: 0;
+    }
+    .container { text-align: center; }
+    .brand {
+      font-size: 26px;
+      font-weight: bold;
+      color: #36bb9c;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px #36bb9c, 0 0 20px #36bb9c;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #36bb9c, 0 0 16px #36bb9c; }
+      to   { text-shadow: 0 0 20px #36bb9c, 0 0 40px #36bb9c; }
+    }
+    .login-box {
+      background: #111;
+      padding: 35px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(54,187,156,0.4);
+      width: 320px;
+      text-align: center;
+      color: #36bb9c;
+      margin: 0 auto;
+    }
+    h2 { margin-bottom: 20px; color: #36bb9c; font-weight: bold; letter-spacing: 1px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #36bb9c;
+      border-radius: 6px;
+      background-color: #000;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      outline: none;
+      transition: 0.3s;
+      box-sizing: border-box;
+    }
+    input::placeholder { color: #888; }
+    input:focus { border-color: #fff; box-shadow: 0 0 8px #36bb9c; }
+    button {
+      width: 100%;
+      background-color: #36bb9c;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    button:hover { background-color: #2ea88b; color: #fff; box-shadow: 0 0 10px #36bb9c; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error { color: #ff4b4b; font-size: 13px; margin-top: 8px; font-weight: bold; min-height: 18px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">Invent X Solutions</div>
+    <div class="login-box">
+      <h2>Iniciar Sesión</h2>
+      <input type="text" id="usuario" placeholder="Usuario" autocomplete="username">
+      <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password">
+      <button id="loginBtn">Ingresar</button>
+      <p class="error" id="errorMsg"></p>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ IMPORTANTE: Reemplaza con la URL real de tu backend en Railway
+    const API_BASE = 'https://tu-backend.up.railway.app';
+
+    // Si ya tiene token válido, redirigir al app
+    if (localStorage.getItem('inventx_token')) {
+      window.location.href = 'index.html';
+    }
+
+    const loginBtn = document.getElementById('loginBtn');
+    const usuario  = document.getElementById('usuario');
+    const password = document.getElementById('password');
+    const errorMsg = document.getElementById('errorMsg');
+
+    async function hacerLogin() {
+      const user = usuario.value.trim();
+      const pass = password.value.trim();
+
+      if (!user || !pass) {
+        errorMsg.textContent = 'Por favor ingresa usuario y contraseña';
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Verificando...';
+      errorMsg.textContent = '';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user, pass })
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          localStorage.setItem('inventx_token', data.token);
+          localStorage.setItem('inventx_user', data.user);
+          window.location.href = 'index.html';
+        } else {
+          errorMsg.textContent = 'Usuario o contraseña incorrectos';
+        }
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = 'Error de conexión con el servidor';
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Ingresar';
+      }
+    }
+
+    loginBtn.addEventListener('click', hacerLogin);
+
+    // Login con Enter
+    password.addEventListener('keydown', e => { if (e.key === 'Enter') hacerLogin(); });
+    usuario.addEventListener('keydown',  e => { if (e.key === 'Enter') password.focus(); });
+  </script>
+</body>
+</html>
