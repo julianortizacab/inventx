@@ -5,7 +5,7 @@ const { pool } = require('../config/database');
 async function getProductosPaginados(req, res) {
   try {
     const pagina  = Math.max(1, parseInt(req.query.pagina)  || 1);
-    const limite  = Math.min(200, parseInt(req.query.limite) || 50);
+    const limite  = Math.min(9999, parseInt(req.query.limite) || 50);
     const busqueda = (req.query.busqueda || '').trim();
     const offset  = (pagina - 1) * limite;
 
