@@ -547,7 +547,7 @@ document.getElementById('btn-exportar').addEventListener('click', async () => {
   btn.disabled = true;
 
   try {
-    const res = await apiFetch(`${API_BASE}/api/productos?pagina=1&limite=2000&busqueda=`);
+    const res = await apiFetch(`${API_BASE}/api/productos?pagina=1&limite=9999&busqueda=`);
     if (!res) { btn.textContent = '📥 Excel'; btn.disabled = false; return; }
     const data = await res.json();
     if (!data.ok || !data.productos.length) {
